@@ -6,11 +6,11 @@ require 'componentr/version'
 Gem::Specification.new do |spec|
   spec.name          = "componentr"
   spec.version       = Componentr::VERSION
-  spec.authors       = ["TODO: Write your name"]
-  spec.email         = ["TODO: Write your email address"]
-#  spec.files = ["Rakefile", "lib/componentr.rb", "lib/componentr/translator.rb", "bin/componentr"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.authors       = ["Dan Miley"]
+  spec.email         = ["dan.miley@gmail.com"]
+#  spec.fibles = ["Rakefile", "lib/componentr.rb", "lib/componentr/translator.rb", "bin/componentr"]
+  spec.summary       = %q{componentized gem}
+  spec.description   = %q{componentized gem}
   spec.homepage      = ""
   spec.license       = "MIT"
 
