@@ -1,5 +1,3 @@
-stderr
-stdout
 /.bundle/
 /.yardoc
 /Gemfile.lock
@@ -14,3 +12,7 @@ stdout
 *.o
 *.a
 mkmf.log
+stderr
+stdout
+.#README.md
+#*.*
