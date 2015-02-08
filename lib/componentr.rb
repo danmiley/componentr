@@ -9,8 +9,11 @@ module Componentr
     translator.hi
   end
   def self.process(options, wargs, input)
-    $stderr.puts "#{options.to_s}  and #{wargs} and #{input}" if options[:passthru] == true
-    wargs['status'] = 'success'
+    # do something smart with passthru
+    $stderr.puts 'checking for status'
+    return wargs, input if wargs && wargs['status'] == 'error'
+    $stderr.puts 'processing'
+    wargs['status'] = 'success' if wargs
     return wargs, input
   end
 
@@ -35,27 +38,20 @@ module Componentr
     end.parse!
 
     # if any commnand line args are actually prpoper named wargs, emobody themm 
-    $stderr.puts "RAWR : optionss #{options}"
     wargs = options[:wargs] rescue nil
     options.delete(:wargs)
 
     wargs = JSON.parse(wargs) if wargs
-    $stderr.puts "RAWR: bJSONIc goodies are #{wargs}, right"
 
     # probe input to see if any wargs are in there
 
-    #p ARGV
     input = ARGV
 
-    net_input = input.map { |i|
+    inputs = input.map { |i|
       begin
         candidate = JSON.parse(i) 
-        $stderr.puts "candidate #{candidate} "
-        $stderr.puts "subcandidate #{candidate['wargs']} " rescue nil
         if candidate && candidate['wargs']
-          $stderr.puts "got one #{candidate}"
           # merge into wargs
-
           wargs.merge!(candidate)
           # if merged, we don't need this in stdin
           nil
@@ -66,16 +62,18 @@ module Componentr
 
     }.compact # get rid of nils
 
-    return options, wargs, net_input
+    return options, wargs, inputs
   end
 
   def self.outputr(wargs, output)
-    puts wargs
+    puts wargs if wargs
     output.map {|o| puts o }
   end
 
   def self.read_eval_print
     outputr(*process(*inputr))
+  rescue Exception => e
+    puts e.message
   end
 
 end
