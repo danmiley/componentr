@@ -1,5 +1,6 @@
 require "componentr/version"
 require 'componentr/translator'
+require 'componentr/jobr'
 require 'json'
 require 'optparse'
 
@@ -8,15 +9,23 @@ module Componentr
     translator = Translator.new(language)
     translator.hi
   end
-  def self.process(options, wargs, input)
-    # do something smart with passthru
-    $stderr.puts 'checking for status'
-    return wargs, input if wargs && wargs['status'] == 'error'
-    $stderr.puts 'processing'
-    wargs['status'] = 'success' if wargs
-    return wargs, input
-  end
 
+  def self.process(options, wargs, input)
+    begin
+      # do something smart with passthru
+      #   return wargs, input if wargs && wargs['status'] == 'error'
+
+      raise Exception if wargs && wargs['status'] == 'error'
+      job = Jobr.new
+      wargs = job.process(options, wargs, input)
+      return wargs, input
+    rescue Exception
+      wargs['history'] = {} if ! wargs['history']
+      wargs['history']["#{Time.now.to_i}#{rand}"]  = "wargs error by #{self.class}"
+
+      return wargs, input
+    end
+  end
 
   def self.inputr
     options = {}
@@ -31,7 +40,7 @@ module Componentr
       end
 
       options[:wargs] = nil 
-      opts.on( '-a', '--wargs JSON', 'Write log to FILE' ) do |json|
+      opts.on( '-a', '--wargs JSON', 'workflow arguments to be passed along (JSON.to_s arg)' ) do |json|
         options[:wargs] = json
       end
 
@@ -59,21 +68,40 @@ module Componentr
       rescue  Exception => e
         i
       end
-
     }.compact # get rid of nils
+
+    $stderr.puts "inputr #{options}, #{wargs}, #{inputs}"
+
+    # we check to see if its a wargs array, thats it
+    if ! wargs
+      # if we didn't get args on the command line, try file i/o,
+      # this is encountered when a proc gets a pipeline input from stdout
+      $stderr.puts "BIG MANGO"
+#      ARGF.each do |line|
+#        $stderr.puts line 
+#      end
+      candidate_args =  ARGF.read  rescue ''
+      whatever =  ARGF.read  rescue ''
+      $stderr.puts "candidate #{candidate_args}"
+      $stderr.puts "whatever #{whatever}"
+      candidate_json = JSON.parse(candidate_args) rescue {}
+      $stderr.puts "desparate #{candidate_json}"
+      wargs = candidate_json
+    end
 
     return options, wargs, inputs
   end
 
   def self.outputr(wargs, output)
-    puts wargs if wargs
-    output.map {|o| puts o }
+    $stdout.puts wargs.to_json.to_s if wargs
+    output.map {|o| $stderr.puts "yup"+o
+      $stdout.puts o }
   end
 
   def self.read_eval_print
     outputr(*process(*inputr))
   rescue Exception => e
-    puts e.message
+    $stderr.puts e.message
   end
 
 end
