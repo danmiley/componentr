@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Componentr::VERSION
   spec.authors       = ["Dan Miley"]
   spec.email         = ["dan.miley@gmail.com"]
-#  spec.fibles = ["Rakefile", "lib/componentr.rb", "lib/componentr/translator.rb", "bin/componentr"]
+#  spec.files = ["Rakefile", "lib/componentr.rb", "lib/componentr/translator.rb", "bin/componentr"]
   spec.summary       = %q{componentized gem}
   spec.description   = %q{componentized gem}
   spec.homepage      = ""
