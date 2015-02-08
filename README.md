@@ -20,7 +20,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+run local
+
+    $  ruby -Ilib ./bin/componentr -v -p -a '{"arg1" : "value1"}'
+    $  ruby -Ilib  ./bin/componentr -v -p -w '{"arg1" : "value1"}' 'foo' '{"wargs" : "true", "tango" : "cash" }' junk > stdout 2> stderr
 
 ## Contributing
 
