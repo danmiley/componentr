@@ -1,63 +1,13 @@
 #!/usr/bin/env ruby
 
-require 'componentr'
 require 'optparse'
 require 'json'
+require 'componentr'
 
-options = {}
-OptionParser.new do |opts|
-  opts.banner = "Usage: coomponentr [options]"
+new_options, wargs, net_input = Componentr.inputr
 
-  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
-    options[:verbose] = v
-  end
-  opts.on("-p", "--[no-]passthru", "Passthru Arguments") do |p|
-    options[:passthru] = p
-  end
-
-  options[:wargs] = nil 
-  opts.on( '-a', '--wargs JSON', 'Write log to FILE' ) do |json|
-    options[:wargs] = json
-  end
-
-
-end.parse!
-
-# if any commnand line args are actually prpoper named wargs,, emobody themm 
-
-wargs = options[:wargs] rescue nil
-options.delete(:wargs)
-
-wargs = JSON.parse(wargs) if wargs
-$stderr.puts "bJSONIc goodies are #{wargs}, right"
-
-  # probe input to see if any wargs are in there
-
-#p ARGV
-input = ARGV
-
-net_input = input.map { |i|
-  begin
-    candidate = JSON.parse(i) 
-      $stderr.puts "candidate #{candidate} "
-        $stderr.puts "subcandidate #{candidate['wargs']} " rescue nil
-    if candidate && candidate['wargs']
-      $stderr.puts "got one #{candidate}"
-      # merge into wargs
-      candidate.delete('wargs')
-
-      wargs.merge!(candidate)
-      # if merged, we don't need this in stdin
-      nil
-    end
-  rescue  Exception => e
-    i
-  end
-
-  }.compact # get rid of nils
-  
 #p options
-wargs, output = Componentr.process(options, wargs, net_input)
+wargs, output = Componentr.process(new_options, wargs, net_input)
 wargs['wargs'] = true
 puts wargs
 output.map {|o| puts o }
