@@ -1,13 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'optparse'
-require 'json'
 require 'componentr'
 
-new_options, wargs, net_input = Componentr.inputr
+Componentr.read_eval_print
 
-#p options
-wargs, output = Componentr.process(new_options, wargs, net_input)
-wargs['wargs'] = true
-puts wargs
-output.map {|o| puts o }
+
+
