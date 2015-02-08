@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'componentr'
+puts Componentr.hi(ARGV[0])

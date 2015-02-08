@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Componentr::VERSION
   spec.authors       = ["TODO: Write your name"]
   spec.email         = ["TODO: Write your email address"]
+#  spec.files = ["Rakefile", "lib/componentr.rb", "lib/componentr/translator.rb", "bin/componentr"]
   spec.summary       = %q{TODO: Write a short summary. Required.}
   spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = ""

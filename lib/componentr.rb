@@ -1,5 +1,9 @@
 require "componentr/version"
+require 'componentr/translator'
 
 module Componentr
-  # Your code goes here...
+  def self.hi(language)
+    translator = Translator.new(language)
+    translator.hi
+  end
 end
