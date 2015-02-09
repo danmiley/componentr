@@ -19,7 +19,7 @@ module Componentr
       job = Jobr.new
       wargs = job.process(options, wargs, input)
       return wargs, input
-    rescue Exception
+    rescue Exception => e
       wargs['history'] = {} if ! wargs['history']
       wargs['history']["#{Time.now.to_i}#{rand}"]  = "wargs error by #{self.class}"
 
@@ -70,22 +70,17 @@ module Componentr
       end
     }.compact # get rid of nils
 
-    $stderr.puts "inputr #{options}, #{wargs}, #{inputs}"
 
     # we check to see if its a wargs array, thats it
     if ! wargs
       # if we didn't get args on the command line, try file i/o,
       # this is encountered when a proc gets a pipeline input from stdout
-      $stderr.puts "BIG MANGO"
 #      ARGF.each do |line|
 #        $stderr.puts line 
 #      end
       candidate_args =  ARGF.read  rescue ''
       whatever =  ARGF.read  rescue ''
-      $stderr.puts "candidate #{candidate_args}"
-      $stderr.puts "whatever #{whatever}"
       candidate_json = JSON.parse(candidate_args) rescue {}
-      $stderr.puts "desparate #{candidate_json}"
       wargs = candidate_json
     end
 
@@ -94,8 +89,7 @@ module Componentr
 
   def self.outputr(wargs, output)
     $stdout.puts wargs.to_json.to_s if wargs
-    output.map {|o| $stderr.puts "yup"+o
-      $stdout.puts o }
+    output.map {|o|  $stdout.puts o }
   end
 
   def self.read_eval_print
